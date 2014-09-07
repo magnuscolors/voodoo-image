@@ -8,9 +8,7 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y python-pip libsasl2-dev python-passlib python-bzrlib python-pip bzr mercurial && \
-    apt-get clean && \
-    pip install setuptools --upgrade && \
-    pip install zc.buildout
+    apt-get clean
 
 
 RUN mkdir /.devstep/.local && chown developer /.devstep/.local && \
@@ -23,6 +21,10 @@ RUN cd /.devstep && \
 
 RUN mkdir -p /workspace && chown developer /workspace
 WORKDIR /workspace
+
+ADD requirements.txt /workspace/requirements.txt
+RUN pip install setuptools --upgrade
+RUN pip install -r requirements.txt
 
 USER developer
 
@@ -45,8 +47,8 @@ RUN mkdir /.devstep/addons/voodoo && \
     mv /workspace/eggs /.devstep/addons/voodoo/eggs && \
     mv /workspace/develop-eggs /.devstep/addons/voodoo/develop-eggs && \
     mv /workspace/downloads /.devstep/addons/voodoo/downloads && \
-    rm /workspace/bootstrap.py
-
+    rm /workspace/bootstrap.py && \
+    rm /workspace/requirements.txt
 
 USER root
 
