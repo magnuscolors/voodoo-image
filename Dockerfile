@@ -31,7 +31,7 @@ RUN /.devstep/bin/configure-addons postgresql
 
 RUN wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
 RUN wget https://gist.githubusercontent.com/rvalyi/db890269f9c8353a101e/raw/edbfa0b6dcac55e4b5176b0a70ec9102a0b94b9a/buildout.dockerfile.cfg && \
-    python bootstrap.py --allow-site-packages
+    python bootstrap.py --allow-site-packages -c buildout.dockerfile.cfg
 
 RUN wget -O- https://gist.githubusercontent.com/rvalyi/0dd63c06310095836062/raw/b1deab1217afc07379fe629c61c976a4c3222837/fake_odoo7 | sh && \
     cd /workspace && python bin/buildout -c buildout.dockerfile.cfg && \
