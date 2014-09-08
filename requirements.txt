@@ -35,3 +35,4 @@ vobject
 werkzeug
 xlwt
 zc.buildout
+pychart
