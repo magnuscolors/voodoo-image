@@ -7,7 +7,7 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y python-pip libsasl2-dev python-passlib python-bzrlib python-pip bzr mercurial && \
+    apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial && \
     apt-get clean
 
 
