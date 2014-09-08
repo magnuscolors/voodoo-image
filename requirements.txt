@@ -39,3 +39,4 @@ PyWebDAV
 zc.buildout
 zc.recipe.egg
 anybox.recipe.openerp
+anybox.testing.datetime
