@@ -34,5 +34,8 @@ vatnumber
 vobject
 werkzeug
 xlwt
-zc.buildout
 pychart
+PyWebDAV
+zc.buildout
+zc.recipe.egg
+anybox.recipe.openerp
