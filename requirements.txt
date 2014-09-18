@@ -42,3 +42,4 @@ MarkupSafe>=0.9.2
 zc.buildout
 zc.recipe.egg
 anybox.recipe.openerp
+pudb
