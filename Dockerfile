@@ -1,9 +1,11 @@
-FROM fgrehm/devstep:v0.1.0
+FROM fgrehm/devstep:v0.2.0
 
 USER root
 
 RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+
+RUN wget -O- https://gist.githubusercontent.com/rvalyi/dce2469129a87f21a079/raw/fe48267cd450938e34f08f8ac5284c9029e3dfde/aeroo | sh
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -14,10 +16,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 RUN mkdir /.devstep/.local && chown developer /.devstep/.local && \
     touch /.devstep/.viminfo && chown developer /.devstep/.viminfo
 
-RUN cd /.devstep && \
-    wget https://gist.githubusercontent.com/rvalyi/ca48cf7b7e8df92fd9e0/raw/0539f2925093a99202ec2f215c2ca8230568bb3f/devstep-pg3 && \
-    patch -p0 < devstep-pg3 && \
-    sed -i -e"s/^#fsync = on/fsync = off/g" /.devstep/addons/postgresql/conf/postgresql.conf
+RUN sed -i -e"s/^#fsync = on/fsync = off/g" /.devstep/addons/postgresql/conf/postgresql.conf
 
 RUN mkdir -p /workspace && chown developer /workspace
 WORKDIR /workspace
@@ -58,8 +57,6 @@ RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7
 
 RUN ln -s /workspace/ak /bin/ak
 
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/fb2f76ef3ed07d796771/raw/76822a8acd679dcb12465a23cc808b22f13fd981/gistfile1.txt | sh
-
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/19a759ca0ee1fe24fb52/raw/b01dc47e9793eeb0db24ae64ae889ce214fbc978/gistfile1.txt | sh
+RUN wget -O- https://gist.githubusercontent.com/rvalyi/833ef622de59a4d4588b/raw/a060f7f0fff206fd6a77e600963036e586c0b43e/pysped | sh
 
 USER developer
