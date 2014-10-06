@@ -5,8 +5,6 @@ USER root
 RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/dce2469129a87f21a079/raw/fe48267cd450938e34f08f8ac5284c9029e3dfde/aeroo | sh
-
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial && \
@@ -57,6 +55,7 @@ RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7
 
 RUN ln -s /workspace/ak /bin/ak
 
+RUN wget -O- https://gist.githubusercontent.com/rvalyi/dce2469129a87f21a079/raw/fe48267cd450938e34f08f8ac5284c9029e3dfde/aeroo | sh
 RUN wget -O- https://gist.githubusercontent.com/rvalyi/833ef622de59a4d4588b/raw/a060f7f0fff206fd6a77e600963036e586c0b43e/pysped | sh
 
 USER developer
