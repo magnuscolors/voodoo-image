@@ -55,7 +55,6 @@ RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7
 
 RUN ln -s /workspace/ak /bin/ak
 
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/84f4d6b144c2421534c05338ffc35c12a78637b3/gistfile1.txt
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/287cd8b05611b9ef92a2/raw/8056b3041c61c48612e2b3f4c575f387a5c74fa3/gistfile1.txt
+RUN wget -O- RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/0e4447dfff75d61cb7005166ccec6582106e7beb/gistfile1.txt | sh
 
 USER developer
