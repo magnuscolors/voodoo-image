@@ -7,7 +7,7 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial && \
+    apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial libxmlsec1-dev python-libxml2 python-openssl && \
     apt-get clean
 
 
@@ -55,6 +55,6 @@ RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7
 
 RUN ln -s /workspace/ak /bin/ak
 
-RUN wget -O- RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/0e4447dfff75d61cb7005166ccec6582106e7beb/gistfile1.txt | sh
+RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/0e4447dfff75d61cb7005166ccec6582106e7beb/gistfile1.txt | sh
 
 USER developer
