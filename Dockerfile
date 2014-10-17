@@ -56,5 +56,6 @@ RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7
 RUN ln -s /workspace/ak /bin/ak
 
 RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/0e4447dfff75d61cb7005166ccec6582106e7beb/gistfile1.txt | sh
+RUN locale-gen pt_BR.UTF-8
 
 USER developer
