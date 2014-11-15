@@ -22,7 +22,6 @@ ADD requirements.txt /workspace/requirements.txt
 RUN pip install pip --upgrade
 RUN pip install setuptools --upgrade
 RUN pip install -r requirements.txt
-RUN pip install anybox.paster.openerp
 
 USER developer
 
