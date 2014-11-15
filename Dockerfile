@@ -10,7 +10,6 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial libxmlsec1-dev python-libxml2 python-openssl && \
     apt-get clean
 
-
 RUN mkdir /.devstep/.local && chown developer /.devstep/.local && \
     touch /.devstep/.viminfo && chown developer /.devstep/.viminfo
 
@@ -50,12 +49,11 @@ RUN mkdir /.devstep/addons/voodoo && \
 
 USER root
 
-RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/5ba7be8be4faf82405cf3c3f28133d3d5ae2fd0f/init1 && \
+RUN wget https://gist.githubusercontent.com/rvalyi/4e62a50aaef186b85970/raw/6946af101b9b9207a707cf7f445eebedc54809bd/init1 && \
     mv init1 /.devstep/.profile.d/voodoo.sh && chmod +x /.devstep/.profile.d/voodoo.sh
 
 RUN ln -s /workspace/ak /bin/ak
 
-RUN wget -O- https://gist.githubusercontent.com/rvalyi/4bcc33f1e4f7b0c31a7c/raw/0e4447dfff75d61cb7005166ccec6582106e7beb/gistfile1.txt | sh
 RUN locale-gen pt_BR.UTF-8
 
 USER developer
