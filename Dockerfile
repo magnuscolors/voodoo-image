@@ -7,7 +7,7 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial libxmlsec1-dev python-libxml2 python-openssl python-pydot && \
+    apt-get install -y python-pip libsasl2-dev python-bzrlib python-pip bzr mercurial libxmlsec1-dev python-libxml2 python-openssl python-pydot python-cups && \
     apt-get clean
 
 RUN mkdir /.devstep/.local && chown developer /.devstep/.local && \
