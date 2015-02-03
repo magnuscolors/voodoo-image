@@ -27,142 +27,46 @@ BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 
 
 # *****************************************************************************
-if [ ! -d "$CONTAINER_DIR" ]; then
-  # we are outside of the container,
-  # this is the bash equivalent of Vagrant with the Docker provider
+export PYTHONPATH=$PYTHONPATH:$PIP_DIR
+if [ ! -d $PIP_DIR ]; then
+  # NOTE sadly we cannot persit .pip_packages inside /workspace
+  # because of this pip bug https://github.com/pypa/pip/issues/1489
+  [ ! $(cat "$WORKDIR/requirements.txt" | grep -v "^#" | grep "[a-z]" | wc -l) = "0" ] && \
+  echo "installing requirements.txt with pip" && \
+  pip install -r "$WORKDIR/requirements.txt" --target=$PIP_DIR
+fi
 
-  if [[ -z $1 || $1 == "up" || $1 == "run" || $1 == "build" || $1 == "debug" || \
-     $1 == "console" && -z $2 || $1 == "psql" || $1 == "help" && -z $2 ]]; then
-
-    if [[ ! -z "$(git remote -v | grep "github.com/akretion/voodoo")" ]]; then
-      git remote remove origin # avoid push to wrong remote
-    fi
-
-    if [[ ! $(docker images | grep "$IMAGE") ]]; then
-      echo "Docker $IMAGE not found!"
-      echo "Warning! We will now download 1.6 GB (but only once)"
-      docker pull fgrehm/devstep:v0.2.0
-      docker pull akretion/voodoo
-    fi
-
-
-    VOLUMES="-v $PWD:$WORKDIR"
-    odoo_dir=$(sed -n 's/^odoo-directory *= *\([^ ]*.*\)/\1/p' < $BUILDOUT)
-    if [ ! -z "$odoo_dir" ]; then
-      eval odoo_dir=$odoo_dir        # eval ~
-      odoo_dir=$(dirname "$odoo_dir/fake") # expands to absolute path
-      echo "assuming shared Odoo directory: $odoo_dir"
-      VOLUMES="$VOLUMES -v $odoo_dir:$SHARED_ODOO_DIR"
-    fi
-    eggs_dir=$(sed -n 's/^eggs-directory *= *\([^ ]*.*\)/\1/p' < $BUILDOUT)
-    if [ ! -z "$eggs_dir" ]; then
-      eval eggs_dir=$eggs_dir        # eval ~
-      eggs_dir=$(dirname "$eggs_dir/fake") # expands to absolute path
-      echo "assuming shared eggs directory: $eggs_dir"
-      [ ! -d "$eggs_dir" ] &&  mkdir -p "$eggs_dir"
-      VOLUMES="$VOLUMES -v $eggs_dir:$SHARED_EGGS_DIR"
-    fi
-    if [[ ! -z $SSH_KEY ]]; then
-      VOLUMES="$VOLUMES -v $SSH_KEY:/.devstep/.ssh/id_rsa:ro"
-    fi
-    echo "Entering Docker warp zone with shared volumes:"
-    echo "$VOLUMES"
-
-    containers=$(docker ps -a | grep " $NAME " | awk '{ print $1 }') || true
-    if [ ! -z $containers ]; then
-      echo "killing existing container(s)"
-      docker rm -v -f $containers 2>/dev/null || true
-    fi
-
-    nc -z 127.0.0.1 "$PORT"
-    while [ $? = 0 ]
-    do
-      echo "WARNING port $PORT seems busy, trying to offset ports"
-      PORT=$((PORT+10))
-      POLLING_PORT=$((POLLING_PORT+10))
-      ADMINER_PORT=$((ADMINER_PORT+10))
-      nc -z 127.0.0.1 "$PORT"
-    done
-    echo "Odoo will run at http://localhost:$PORT"
-
-    if [ "$USE_ADMINER" = true ]; then
-        echo "Adminer will run at http://localhost:$ADMINER_PORT/?pgsql=db&username=developer"
-    fi
-    PORTS="-p $PORT:8069 -p $POLLING_PORT:8072"
-
-    runodoo () {
-        docker run $START_OPTIONS -e POSTGRESQL_DB="$POSTGRESQL_DB" \
-                   -e POSTGRESQL_DATA="$POSTGRESQL_DATA" \
-                   -u $DOCKER_USER \
-                   --rm=$DOCKER_RM --name $NAME $PORTS $VOLUMES -w "$WORKDIR" $IMAGE \
-                   -- /bin/bash -c "'$WORKDIR/ak $@'"
-    }
-
-
-    runadminer () {
-        if [ "$USE_ADMINER" = true ]; then
-            sleep 1
-            docker run -d -p $ADMINER_PORT:80 --link $NAME:db sebastienbeau/adminer > .adminer.pid
-        fi
-    }
-
-    runadminer & runodoo
-
-    if [ "$USE_ADMINER" = true ]; then
-        echo "*** Killing Adminer"
-        adminerid=$(cat .adminer.pid)
-        id=$(docker kill $adminerid)
-        id=$(docker rm $adminerid)
-        rm .adminer.pid
-    fi
-  else
-    exec ssh "$SSH_USER@$SERVER" "$@"
+if [ -d $SHARED_EGGS_DIR ]; then
+  eggs_dir="$SHARED_EGGS_DIR"
+  if [ ! $(ls "$SHARED_EGGS_DIR" | grep reportlab) ]; then
+    echo "initializing shared host eggs directory from Docker image"
+    sudo chown -R $DOCKER_USER $eggs_dir
+    cp "$IMAGE_EGGS_DIR"/. $eggs_dir -R
   fi
+else
+  eggs_dir="eggs"
+fi
+
+if [ ! -f "$WORKDIR/bin/buildout" ]; then 
+  echo "Bootstrapping Buildout..."
+  cd /tmp
+  cp "$WORKDIR/buildout.cfg" .
+  sudo pip install --upgrade setuptools
+  sudo pip install --upgrade zc.buildout
+  wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
+  python bootstrap.py --allow-site-packages
+  cp -rf bin "$WORKDIR/bin"
+  cd "$WORKDIR"
+fi
+
+[ ! -d parts ] && mkdir parts
+
+if [ -f "$SHARED_ODOO_DIR"/setup.py ]; then
+  [ ! -f "$WORKDIR/parts/odoo/setup.py" ] && ln -s "$SHARED_ODOO_DIR" "$WORKDIR/parts/odoo"
+fi
 
 
-# *****************************************************************************
-else # when we are inside of the container
-
-  export PYTHONPATH=$PYTHONPATH:$PIP_DIR
-  if [ ! -d $PIP_DIR ]; then
-    # NOTE sadly we cannot persit .pip_packages inside /workspace
-    # because of this pip bug https://github.com/pypa/pip/issues/1489
-    [ ! $(cat "$WORKDIR/requirements.txt" | grep -v "^#" | grep "[a-z]" | wc -l) = "0" ] && \
-    echo "installing requirements.txt with pip" && \
-    pip install -r "$WORKDIR/requirements.txt" --target=$PIP_DIR
-  fi
-
-  if [ -d $SHARED_EGGS_DIR ]; then
-    eggs_dir="$SHARED_EGGS_DIR"
-    if [ ! $(ls "$SHARED_EGGS_DIR" | grep reportlab) ]; then
-      echo "initializing shared host eggs directory from Docker image"
-      sudo chown -R $DOCKER_USER $eggs_dir
-      cp "$IMAGE_EGGS_DIR"/. $eggs_dir -R
-    fi
-  else
-    eggs_dir="eggs"
-  fi
-
-  if [ ! -f "$WORKDIR/bin/buildout" ]; then 
-    echo "Bootstrapping Buildout..."
-    cd /tmp
-    cp "$WORKDIR/buildout.cfg" .
-    sudo pip install --upgrade setuptools
-    sudo pip install --upgrade zc.buildout
-    wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
-    python bootstrap.py --allow-site-packages
-    cp -rf bin "$WORKDIR/bin"
-    cd "$WORKDIR"
-  fi
-
-  [ ! -d parts ] && mkdir parts
-
-  if [ -f "$SHARED_ODOO_DIR"/setup.py ]; then
-    [ ! -f "$WORKDIR/parts/odoo/setup.py" ] && ln -s "$SHARED_ODOO_DIR" "$WORKDIR/parts/odoo"
-  fi
-
-
-  case $1 in # Command dispatch ***********************************************
+case $1 in # Command dispatch ***********************************************
 
   run)
     shift
@@ -263,8 +167,4 @@ EOF
     [ ! -z "$1" ] && exec ssh "$SSH_USER@$SERVER" "$@"
     ;;
 
-  esac
-
-
-  [ "$FROM_BASH" != true ] && export FROM_BASH=true && exec /bin/bash
-fi
+esac
