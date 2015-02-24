@@ -26,43 +26,55 @@ SSH_KEY=${SSH_KEY:=""}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 
 
-# *****************************************************************************
-export PYTHONPATH=$PYTHONPATH:$PIP_DIR
-if [ ! -d $PIP_DIR ]; then
-  # NOTE sadly we cannot persit .pip_packages inside /workspace
-  # because of this pip bug https://github.com/pypa/pip/issues/1489
-  [ ! $(cat "$WORKDIR/requirements.txt" | grep -v "^#" | grep "[a-z]" | wc -l) = "0" ] && \
-  echo "installing requirements.txt with pip" && \
-  pip install -r "$WORKDIR/requirements.txt" --target=$PIP_DIR
+# *************************** INITIALISATION FIRST RUN ********************
+
+if $SHARED_EGGS; then
+  for folder in eggs develop-eggs downloads
+  do
+    if [ ! -d "$SHARED_FOLDER/$folder" ]; then
+        mkdir $SHARED_FOLDER/$folder
+    fi
+    if [ ! -d "$WORKDIR/$folder" ]; then
+      ln -s $SHARED_FOLDER/$folder $WORKDIR/$folder
+    fi
+  done
+elif [ ! -d "$WORKDIR/eggs" ]; then
+  mkdir /workspace/eggs
 fi
 
-if [ -d $SHARED_EGGS_DIR ]; then
-  eggs_dir="$SHARED_EGGS_DIR"
-  if [ ! $(ls "$SHARED_EGGS_DIR" | grep reportlab) ]; then
-    echo "initializing shared host eggs directory from Docker image"
-    sudo chown -R $DOCKER_USER $eggs_dir
-    cp "$IMAGE_EGGS_DIR"/. $eggs_dir -R
-  fi
-else
-  eggs_dir="eggs"
+if [[ -z $(ls "/$WORKDIR/eggs" | grep reportlab) ]]; then
+  echo "initializing shared host eggs directory from Docker image"
+  cp "$IMAGE_EGGS_DIR"/. /$WORKDIR/eggs -R
 fi
 
 if [ ! -f "$WORKDIR/bin/buildout" ]; then 
   echo "Bootstrapping Buildout..."
   cd /tmp
   cp "$WORKDIR/buildout.cfg" .
-  sudo pip install --upgrade setuptools
-  sudo pip install --upgrade zc.buildout
   wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
-  python bootstrap.py --allow-site-packages
+  python bootstrap.py
   cp -rf bin "$WORKDIR/bin"
   cd "$WORKDIR"
 fi
 
 [ ! -d parts ] && mkdir parts
 
-if [ -f "$SHARED_ODOO_DIR"/setup.py ]; then
-  [ ! -f "$WORKDIR/parts/odoo/setup.py" ] && ln -s "$SHARED_ODOO_DIR" "$WORKDIR/parts/odoo"
+
+if [ ! -d "$SHARED_FOLDER/odoo" ]; then
+  echo "There is not odoo in $SHARED_FOLDER. Download it..."
+  cd $SHARED_FOLDER
+  git clone https://github.com/OCA/OCB.git
+fi
+
+if [ ! -f "$WORKDIR/parts/odoo/setup.py" ]; then
+  cd $WORKDIR/parts
+  if $SHALLOW_CLONE_ODOO; then
+    echo "Shallow clone option is activated, cloning light version of odooi from local"
+    git clone file://$SHARED_FOLDER/odoo --depth 1
+  else
+    echo "Shallow clone option is inactivated, cloning full version of odoo from local"
+    git clone $SHARED_FOLDER/odoo
+  fi
 fi
 
 
@@ -89,12 +101,12 @@ case $1 in # Command dispatch ***********************************************
     cat<<EOF
 
       WARNING you didn't set any valid existing odoo repo in your
-      buildout.dev.cfg odoo-directory.
+      voodoo.yml odoo-directory.
       If you continue, the recipe will do a FULL CLONE of Odoo into this
       directory, this clone will download ~400 Mo and can take a while...
 
       Alternatively you can abort and close the container and set a valid
-      existing odoo-directory in buildout.dev.cfg if you already have some
+      existing odoo-directory in voodoo.yml if you already have some
       with the right branch on your computer.
 
       will now clone odoo...
@@ -103,14 +115,10 @@ EOF
     fi
 
     echo "building project with Anybox Buildout recipe..."
-    if [ -d /etc/service/postgresql ]; then
-      python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT" "buildout:eggs-directory=$eggs_dir" \
-      "buildout:openerp-downloads-directory=/.devstep/addons/voodoo/downloads" \
-      "buildout:develop-eggs-directory=/.devstep/addons/voodoo/develop-eggs" \
-      "openerp:options.db_user=$DOCKER_USER" "openerp:options.db_name=db" "openerp:options.data_dir=.filestore"
-    else
-      python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT" "buildout:eggs-directory=$eggs_dir"
-    fi
+    python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT" "buildout:eggs-directory=$eggs_dir" \
+    "buildout:openerp-downloads-directory=/.devstep/addons/voodoo/downloads" \
+    "buildout:develop-eggs-directory=/.devstep/addons/voodoo/develop-eggs" \
+    "openerp:options.db_user=$DOCKER_USER" "openerp:options.db_name=db" "openerp:options.data_dir=.filestore"
     ;;
 
   up)
