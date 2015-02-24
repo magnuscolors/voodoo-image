@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+cd /workspace
+wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
+python bootstrap.py -c buildout.dockerfile.cfg
+./fake_odoo7
+./fake_odoo8
+mkdir /.devstep/addons/voodoo
+mv /workspace/eggs /.devstep/addons/voodoo/eggs
+mv /workspace/develop-eggs /.devstep/addons/voodoo/develop-eggs
+mv /workspace/downloads /.devstep/addons/voodoo/downloads
+rm /workspace/bootstrap.py
+rm buildout.dockerfile.cfg fake_odoo8 fake_odoo7 build_all

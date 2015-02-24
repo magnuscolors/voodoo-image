@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+mkdir -p parts/odoo/openerp/tools
+cd parts/odoo
+wget https://raw.githubusercontent.com/odoo/odoo/7.0/setup.py
+wget https://raw.githubusercontent.com/odoo/odoo/7.0/openerp-server
+cd openerp
+echo "import tools" > __init__.py
+wget https://raw.githubusercontent.com/odoo/odoo/7.0/openerp/release.py
+wget https://raw.githubusercontent.com/odoo/odoo/7.0/openerp/loglevels.py
+cd tools
+echo "from config import config" > __init__.py
+wget https://raw.githubusercontent.com/odoo/odoo/7.0/openerp/tools/config.py
+cd ..
+mkdir conf
+touch conf/__init__.py
+cd /workspace
+python bin/buildout -c buildout.dockerfile.cfg
+rm -rf /workspace/parts
+rm -rf /workspace/etc
+rm /workspace/upgrade.py
