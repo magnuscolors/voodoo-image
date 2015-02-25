@@ -28,6 +28,7 @@ BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 
 # *************************** INITIALISATION FIRST RUN ********************
 
+# Link the shared eggs folder or init a new one
 if $SHARED_EGGS; then
   for folder in eggs develop-eggs downloads
   do
@@ -47,6 +48,8 @@ if [[ -z $(ls "/$WORKDIR/eggs" | grep reportlab) ]]; then
   cp "$IMAGE_EGGS_DIR"/. /$WORKDIR/eggs -R
 fi
 
+
+# Generate bin/buildout if missing
 if [ ! -f "$WORKDIR/bin/buildout" ]; then 
   echo "Bootstrapping Buildout..."
   cd /tmp
@@ -57,8 +60,9 @@ if [ ! -f "$WORKDIR/bin/buildout" ]; then
   cd "$WORKDIR"
 fi
 
-[ ! -d parts ] && mkdir parts
 
+# Init part folder and clone odoo inside if missing
+[ ! -d parts ] && mkdir parts
 
 if [ ! -d "$SHARED_FOLDER/odoo" ]; then
   echo "There is not odoo in $SHARED_FOLDER. Download it..."
@@ -78,7 +82,9 @@ if [ ! -f "$WORKDIR/parts/odoo/setup.py" ]; then
 fi
 
 
-case $1 in # Command dispatch ***********************************************
+# *************************** COMMAND DISPATCH ********************
+
+case $1 in
 
   run)
     shift
