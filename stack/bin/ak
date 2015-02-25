@@ -1,26 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-IMAGE=${IMAGE:="akretion/voodoo"}
-USE_ADMINER=${USE_ADMINER:=false}
-NAME=${NAME:="voodoo-${PWD##*/}"}
-PORT=${PORT:="8069"}
-POLLING_PORT=${POLLING_PORT:="8072"}
-ADMINER_PORT=${ADMINER_PORT:="8061"}
 SERVER=${SERVER:="$2.akretion.com"}
 POSTGRESQL_DB=${POSTGRESQL_DB:="db"}
 POSTGRESQL_DATA=${POSTGRESQL_DATA:="/workspace/.db"}
 WORKDIR=${WORKDIR:="/workspace"}
-START_OPTIONS=${START_OPTIONS:="-ti"}
-CONTAINER_FILE=${CONTAINER_DIR:="/.devstep"}
-PIP_DIR=${PIP_DIR:="/.devstep/.pip_packages"}
-SHARED_EGGS_DIR=${SHARED_EGGS_DIR:="/.devstep/addons/voodoo/host_eggs"}
-IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/.devstep/addons/voodoo/eggs"}
-SHARED_ODOO_DIR=${SHARED_ODOO_DIR:="/.devstep/addons/voodoo/odoo"}
 DOCKER_USER=${DOCKER_USER:="developer"}
-DOCKER_RM=${DOCKER_RM:="true"}
-SSH_USER=${SSH_USER:="api"}
-SSH_KEY=${SSH_KEY:=""}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 
 
