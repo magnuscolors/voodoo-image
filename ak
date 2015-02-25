@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# This command is a bit like a Makefile: if your are outside a Docker 
-# container it will send you inside a new Docker container and then it
-# will give you shortcuts to main project commands.
+set -e
 
 IMAGE=${IMAGE:="akretion/voodoo"}
 USE_ADMINER=${USE_ADMINER:=false}
@@ -40,7 +38,7 @@ if $SHARED_EGGS; then
     fi
   done
 elif [ ! -d "$WORKDIR/eggs" ]; then
-  mkdir /workspace/eggs
+  mkdir $WORKDIR/eggs
 fi
 
 if [[ -z $(ls "/$WORKDIR/eggs" | grep reportlab) ]]; then
@@ -51,12 +49,10 @@ fi
 # Generate bin/buildout if missing
 if [ ! -f "$WORKDIR/bin/buildout" ]; then 
   echo "Bootstrapping Buildout..."
-  cd /tmp
-  cp "$WORKDIR/buildout.cfg" .
+  cd $WORKDIR
   wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
   python bootstrap.py
-  cp -rf bin "$WORKDIR/bin"
-  cd "$WORKDIR"
+  rm bootstrap.py
 fi
 
 # *************************** COMMAND DISPATCH ********************
@@ -79,29 +75,8 @@ case $1 in
 
   build)
     shift
-
-    if [ ! -d "$WORKDIR/parts/odoo" ]; then
-    cat<<EOF
-
-      WARNING you didn't set any valid existing odoo repo in your
-      voodoo.yml odoo-directory.
-      If you continue, the recipe will do a FULL CLONE of Odoo into this
-      directory, this clone will download ~400 Mo and can take a while...
-
-      Alternatively you can abort and close the container and set a valid
-      existing odoo-directory in voodoo.yml if you already have some
-      with the right branch on your computer.
-
-      will now clone odoo...
-
-EOF
-    fi
-
     echo "building project with Anybox Buildout recipe..."
-    python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT" "buildout:eggs-directory=$eggs_dir" \
-    "buildout:openerp-downloads-directory=/.devstep/addons/voodoo/downloads" \
-    "buildout:develop-eggs-directory=/.devstep/addons/voodoo/develop-eggs" \
-    "openerp:options.db_user=$DOCKER_USER" "openerp:options.db_name=db" "openerp:options.data_dir=.filestore"
+    python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT"
     ;;
 
   up)
