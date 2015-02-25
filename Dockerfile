@@ -34,4 +34,6 @@ RUN sh /workspace/build_all
 USER root
 ADD stack/bin/ak /usr/local/bin/ak
 
+USER developer
+
 WORKDIR /workspace
