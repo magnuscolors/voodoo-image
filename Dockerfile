@@ -14,22 +14,24 @@ RUN sed -i -e"s/^#fsync = on/fsync = off/g" /.devstep/addons/postgresql/conf/pos
 
 RUN mkdir -p /workspace && chown developer /workspace
 
-RUN ln -s /workspace/ak /bin/ak
-
 RUN locale-gen pt_BR.UTF-8
 
 USER developer
 
-#Config for developer user
+# Config for developer user
 ADD stack/profile/voodoo.sh /.devstep/.profile.d/voodoo.sh
 RUN mkdir -p /.devstep/.ssh
 RUN mkdir /.devstep/.local && touch /.devstep/.viminfo
 
-#Install postgresql
+# Install postgresql
 RUN /.devstep/bin/configure-addons postgresql
 
-#Pre-build environement for odoo
+# Pre-build environement for odoo
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
+
+# Install ak cli
+USER root
+ADD stack/bin/ak /usr/local/bin/ak
 
 WORKDIR /workspace
