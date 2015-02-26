@@ -81,13 +81,6 @@ case $1 in
     python "$WORKDIR/bin/buildout" "$@" -o openerp:freeze-to=frozen.cfg
     ;;
 
-  up)
-    shift
-    export FROM_BASH=true
-    ak build
-    ak run "$@"
-    ;;
-
   console)
     shift
     ak wait_postgres
@@ -159,11 +152,22 @@ case $1 in
 
   help)
     cat<<EOF
+    Usage:
+      ak [COMMAND] [ARGS...]
+      ak --help
 
-    available commands are:
-    run, debug, build, freeze, up, console
-    load, reload, dump, psql, help
-
+    Commands:
+      run       Run Odoo
+      debug     Run Odoo in debug mode
+      build     Build Your Project using frozen.conf if existing or buildout.dev.cfg
+                If you have an existing frozen.cfg and you want to force the update
+                just add --update as arguments "ak build --update"
+      freeze    Freeze all dependency for your project
+      console   Open a Odoo Shell
+      psql      Open a Psql shell
+      load      Load a database from a file args. ak load [file] [dbname]
+      reload    Drop and load a database from a file args. ak reload [file] [dbname]
+      dump      Dump a database ak dump [file] [dbname]
 EOF
     ;;
 
