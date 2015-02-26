@@ -10,21 +10,24 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev && \
     apt-get clean
 
-RUN sed -i -e"s/^#fsync = on/fsync = off/g" /.devstep/addons/postgresql/conf/postgresql.conf
+RUN sed -i -e"s/^#fsync = on/fsync = off/g" /opt/devstep/addons/postgresql/conf/postgresql.conf
 
 RUN mkdir -p /workspace && chown developer /workspace
 
 RUN locale-gen pt_BR.UTF-8
 
+# force postgresql install due to this bug https://github.com/fgrehm/devstep/pull/91
+RUN DEBIAN_FRONTEND=noninteractive && apt-get install -y postgresql
+
 USER developer
 
 # Config for developer user
-ADD stack/profile/voodoo.sh /.devstep/.profile.d/voodoo.sh
-RUN mkdir -p /.devstep/.ssh
-RUN mkdir /.devstep/.local && touch /.devstep/.viminfo
+ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
+RUN mkdir -p /home/devstep/.ssh
+RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
 
 # Install postgresql
-RUN /.devstep/bin/configure-addons postgresql
+RUN /opt/devstep/bin/configure-addons postgresql
 
 # Pre-build environement for odoo
 ADD stack/build /workspace/
