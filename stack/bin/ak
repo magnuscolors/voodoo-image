@@ -161,7 +161,8 @@ case $1 in
     cat<<EOF
 
     available commands are:
-    run, debug, build, up, console, psql, help
+    run, debug, build, freeze, up, console
+    load, reload, dump, psql, help
 
 EOF
     ;;
