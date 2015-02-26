@@ -1,4 +1,4 @@
-FROM fgrehm/devstep:v0.2.0
+FROM fgrehm/devstep:v0.3.0
 
 USER root
 
