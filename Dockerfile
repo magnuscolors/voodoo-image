@@ -7,8 +7,9 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev && \
-    apt-get clean
+    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip && \
+    apt-get clean && \
+    pip install pgcli
 
 RUN sed -i -e"s/^#fsync = on/fsync = off/g" /opt/devstep/addons/postgresql/conf/postgresql.conf
 
