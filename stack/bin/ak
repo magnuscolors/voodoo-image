@@ -44,6 +44,8 @@ fi
 
 case $1 in
 
+# Buildout & Co command
+
   run)
     shift
     [ ! -f "$WORKDIR/bin/start_openerp" ] || [ ! -f "$WORKDIR/parts/odoo/setup.py" ] && \
@@ -64,8 +66,34 @@ case $1 in
     python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT"
     ;;
 
+  up)
+    shift
+    export FROM_BASH=true
+    ak build
+    ak run "$@"
+    ;;
+
+  console)
+    shift
+    ak wait_postgres
+    python "$WORKDIR/bin/python_openerp" "$@"
+    ;;
+
+# Postgresql Command
+
+  psql)
+    shift
+    ak wait_postgres
+    if [ -z "$1" ]; then
+      psql db
+    else
+      psql "$@"
+    fi
+    ;;
+
   load)
     shift
+    ak wait_postgres
     dbname=${2-"db"}
     echo "Loading database $1 in $dbname"
     createdb $dbname
@@ -80,6 +108,7 @@ case $1 in
 
   reload)
     shift
+    ak wait_postgres
     dbname=${2-"db"}
     echo "Drop database $dbname"
     dropdb $dbname --if-exists
@@ -88,33 +117,11 @@ case $1 in
 
   dump)
     shift
+    ak wait_postgres
     dbname=${2-"db"}
     file=${1-$dbname}
     echo "Dump database $dbname to $WORKDIR/backup/$file.sql.gz"
     pg_dump $dbname | gzip > "$WORKDIR/backup/$file.sql.gz"
-    ;;
-
-  up)
-    shift
-    export FROM_BASH=true
-    ak build
-    ak run "$@"
-    ;;
-
-  console)
-    shift
-    ak wait_postgres
-    python "$WORKDIR/bin/python_openerp" "$@"
-    ;;
-
-  psql)
-    shift
-    ak wait_postgres
-    if [ -z "$1" ]; then
-      psql db
-    else
-      psql "$@"
-    fi
     ;;
 
   wait_postgres)
