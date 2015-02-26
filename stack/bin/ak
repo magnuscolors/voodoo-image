@@ -64,6 +64,36 @@ case $1 in
     python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT"
     ;;
 
+  load)
+    shift
+    dbname=${2-"db"}
+    echo "Loading database $1 in $dbname"
+    createdb $dbname
+    if [[ $1 =~ \.gz$ ]]; then
+        gunzip -c $1 | psql $dbname
+    else
+        psql $dbname < $1
+    fi
+    echo "Inactivated cron"
+    psql $dbname -c "UPDATE ir_cron SET active=False"
+    ;;
+
+  reload)
+    shift
+    dbname=${2-"db"}
+    echo "Drop database $dbname"
+    dropdb $dbname --if-exists
+    ak load $1 $dbname
+    ;;
+
+  dump)
+    shift
+    dbname=${2-"db"}
+    file=${1-$dbname}
+    echo "Dump database $dbname to $WORKDIR/backup/$file.sql.gz"
+    pg_dump $dbname | gzip > "$WORKDIR/backup/$file.sql.gz"
+    ;;
+
   up)
     shift
     export FROM_BASH=true
