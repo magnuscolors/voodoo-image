@@ -62,8 +62,23 @@ case $1 in
 
   build)
     shift
-    echo "building project with Anybox Buildout recipe..."
-    python "$WORKDIR/bin/buildout" "$@" "-c" "$BUILDOUT"
+    if [ "$1" == "--update" ]; then
+        file=$BUILDOUT
+        shift
+    elif [ ! -f "$WORKDIR/frozen.cfg" ]; then
+        file=$BUILDOUT
+    else
+        file="frozen.cfg"
+    fi
+    echo "building project with Anybox Buildout recipe and config file $file"
+    echo "this can take a while..."
+    python "$WORKDIR/bin/buildout" "$@" "-c" "$file"
+    ;;
+
+  freeze)
+    shift
+    echo "Freeze project an new frozen.cfg will be generated"
+    python "$WORKDIR/bin/buildout" "$@" -o openerp:freeze-to=frozen.cfg
     ;;
 
   up)
