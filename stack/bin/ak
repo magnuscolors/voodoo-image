@@ -7,7 +7,7 @@ POSTGRESQL_DATA=${POSTGRESQL_DATA:="/workspace/.db"}
 WORKDIR=${WORKDIR:="/workspace"}
 DOCKER_USER=${DOCKER_USER:="developer"}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
-
+IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/opt/devstep/addons/voodoo/eggs"}
 
 # *************************** INITIALISATION FIRST RUN ********************
 
