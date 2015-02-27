@@ -13,6 +13,8 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 
 RUN sed -i -e"s/^#fsync = on/fsync = off/g" /opt/devstep/addons/postgresql/conf/postgresql.conf
 
+RUN sed -i -e"s/postgres/developer/g" /home/devstep/.profile.d/postgresql.sh
+
 RUN mkdir -p /workspace && chown developer /workspace
 
 RUN locale-gen pt_BR.UTF-8
