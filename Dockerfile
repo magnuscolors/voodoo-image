@@ -7,7 +7,7 @@ RUN wget https://s3.amazonaws.com/akretion/packages/wkhtmltox-0.12.1_linux-trust
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip && \
+    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
     apt-get clean && \
     pip install pgcli
 
