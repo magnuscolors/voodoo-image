@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+if [ ! -f /home/devstep/.message_diplayed ]; then
+
 force_color_prompt=true
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -67,3 +69,7 @@ printf "$COL_22 MMMMMMMMMMMMIIIIIIIIII7MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 printf "$COL_23 MMMMMMMMMMM7IIIIIIIIIIMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM powered by Akretion!\n"
 printf "$RESET" # Reset colors to "normal"
 echo ""
+
+sudo touch /home/devstep/.message_diplayed
+
+fi
