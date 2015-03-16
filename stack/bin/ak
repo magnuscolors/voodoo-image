@@ -133,18 +133,18 @@ case $1 in
     ;;
 
   wait_postgres)
-    [ ! -d /etc/service/postgresql ] && exit
-    [ -f /.devstep/log/postgresql.log ] && r=$(grep "ready to accept connections" /.devstep/log/postgresql.log)
+    [ ! -d /etc/devstep/service/postgresql ] && exit
+    [ -f /home/devstep/log/postgresql.log ] && r=$(grep "ready to accept connections" /home/devstep/log/postgresql.log)
     [ -z "$r" ] && echo "waiting for Postgresql embedded server to start..."
     while [ -z "$r" ]
     do
       sleep 0.1
-      [ -f  /.devstep/log/postgresql.log ] && r=$(grep "ready to accept connections" /.devstep/log/postgresql.log)
+      [ -f /home/devstep/log/postgresql.log ] && r=$(grep "ready to accept connections" /home/devstep/log/postgresql.log)
     done
     sleep 0.01
     if [ -z "$(psql -l | grep db | grep $DOCKER_USER)" ]; then
       sleep 0.3
-      psql -c "ALTER DATABASE db OWNER TO $DOCKER_USER;"
+      sudo setuidgid postgres psql -c "ALTER DATABASE db OWNER TO $DOCKER_USER;"
       sleep 0.3
     fi
     exit
