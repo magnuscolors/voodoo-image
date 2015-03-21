@@ -1,4 +1,4 @@
-FROM fgrehm/devstep:v0.3.0
+FROM fgrehm/devstep:v0.3.1
 
 USER root
 
@@ -19,9 +19,6 @@ RUN sed -i -e"s/postgres/developer/g" /home/devstep/.profile.d/postgresql.sh
 RUN mkdir -p /workspace && chown developer /workspace
 
 RUN locale-gen pt_BR.UTF-8
-
-# force postgresql install due to this bug https://github.com/fgrehm/devstep/pull/91
-RUN DEBIAN_FRONTEND=noninteractive && apt-get install -y postgresql
 
 USER developer
 
