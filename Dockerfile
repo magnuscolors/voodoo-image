@@ -38,6 +38,10 @@ RUN sh /workspace/build_all
 USER root
 ADD stack/bin/ak /usr/local/bin/ak
 
+#Install fonts
+ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
+RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
+
 USER developer
 
 WORKDIR /workspace
