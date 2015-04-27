@@ -87,6 +87,41 @@ case $1 in
     python "$WORKDIR/bin/python_openerp" "$@"
     ;;
 
+  server_test)
+    shift
+    echo "Test the module $@ on db"
+    export FROM_BASH=true
+    if [ -z "$1" ]; then
+        module="all"
+    else
+        module="$@"
+    fi
+    ak run "-u" "$module" "-d db" "--stop-after-init" "--test-enable"
+    ;;
+
+  code_test)
+    shift
+    echo "Launch flake8 and pylint tests."
+    export FROM_BASH=true
+    set +e
+    CONFIG_DIR="/opt/devstep/tests/"
+
+    if [ -z "$1" ]; then
+        cd /workspace/modules
+        module_to_test=$(ls)
+    else
+        cd $(find /workspace/parts -name $@)
+        module_to_test="$@"
+    fi
+
+    echo "Run flake8 tests"
+    flake8 . --config=${CONFIG_DIR}/travis_run_flake8__init__.cfg
+    flake8 . --config=${CONFIG_DIR}/travis_run_flake8.cfg
+
+    echo "Run pylint tests"
+    pylint --rcfile=${CONFIG_DIR}/travis_run_pylint.cfg $module_to_test
+    ;;
+
 # Postgresql Command
 
   psql)

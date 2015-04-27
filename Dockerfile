@@ -20,6 +20,9 @@ RUN mkdir -p /workspace && chown developer /workspace
 
 RUN locale-gen pt_BR.UTF-8
 
+RUN pip install flake8 && \
+    pip install pylint
+
 USER developer
 
 # Config for developer user
@@ -33,6 +36,9 @@ RUN /opt/devstep/bin/configure-addons postgresql
 # Pre-build environement for odoo
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
+
+# Pre-build for tests
+RUN sh /workspace/build_tests
 
 # Install ak cli
 USER root
