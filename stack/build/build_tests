@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+cd /opt/devstep
+mkdir tests
+cd tests
+wget https://raw.githubusercontent.com/OCA/maintainer-quality-tools/master/travis/cfg/travis_run_pylint.cfg
+wget https://raw.githubusercontent.com/OCA/maintainer-quality-tools/master/travis/cfg/travis_run_flake8.cfg
+wget https://raw.githubusercontent.com/OCA/maintainer-quality-tools/master/travis/cfg/travis_run_flake8__init__.cfg
