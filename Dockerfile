@@ -1,16 +1,17 @@
-FROM fgrehm/devstep:v0.3.1
+FROM fgrehm/devstep:v0.4.0
 
 USER root
-
-RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
     apt-get install -y python-cups python-dbus python-openssl python-libxml2 && \
+    apt-get install -y xfonts-base xfonts-75dpi && \
     apt-get clean && \
     pip install pgcli
+
+RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
+    dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 
 RUN sed -i -e"s/^#fsync = on/fsync = off/g" /opt/devstep/addons/postgresql/conf/postgresql.conf
 
