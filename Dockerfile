@@ -3,7 +3,7 @@ FROM fgrehm/devstep:v0.3.1
 USER root
 
 RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+    dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
