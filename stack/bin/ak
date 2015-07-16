@@ -32,7 +32,7 @@ if [[ -z $(ls "/$WORKDIR/eggs" | grep reportlab) ]]; then
 fi
 
 # Generate bin/buildout if missing
-if [ ! -f "$WORKDIR/bin/buildout" ]; then 
+if [ ! -f "$WORKDIR/bin/buildout" ]; then
   echo "Bootstrapping Buildout..."
   cd $WORKDIR
   wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
@@ -72,6 +72,7 @@ case $1 in
     fi
     echo "building project with Anybox Buildout recipe and config file $file"
     echo "this can take a while..."
+    sudo chmod -R 0777 $WORKDIR/develop-eggs # FIXME work around for https://github.com/akretion/voodoo/issues/18
     python "$WORKDIR/bin/buildout" "$@" "-c" "$file"
     ;;
 
