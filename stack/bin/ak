@@ -13,7 +13,7 @@ IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/opt/devstep/addons/voodoo/eggs"}
 
 # Link the shared eggs folder or init a new one
 if $SHARED_EGGS; then
-  for folder in eggs develop-eggs downloads
+  for folder in eggs downloads
   do
     if [ ! -d "$SHARED_FOLDER/$folder" ]; then
         mkdir $SHARED_FOLDER/$folder
