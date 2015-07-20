@@ -72,7 +72,6 @@ case $1 in
     fi
     echo "building project with Anybox Buildout recipe and config file $file"
     echo "this can take a while..."
-    sudo chmod -R 0777 $WORKDIR/develop-eggs # FIXME work around for https://github.com/akretion/voodoo/issues/18
     python "$WORKDIR/bin/buildout" "$@" "-c" "$file"
     ;;
 
