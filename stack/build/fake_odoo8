@@ -20,7 +20,7 @@ touch conf/__init__.py
 cd /workspace
 
 # workaround for pydot bad pypi index
-if [[ $EUID -ne 0 ]]; then
+if [[ "$(id -u)" != "0" ]]; then
   sudo easy_install pydot
 else
   easy_install pydot
