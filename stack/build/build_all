@@ -5,7 +5,7 @@ wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
 python bootstrap.py -c buildout.dockerfile.cfg
 sh fake_odoo7
 sh fake_odoo8
-sh fake odoo9
+sh fake_odoo9
 mkdir -p /opt/devstep/addons/voodoo
 mv /workspace/eggs /opt/devstep/addons/voodoo/eggs
 mv /workspace/develop-eggs /opt/devstep/addons/voodoo/develop-eggs
