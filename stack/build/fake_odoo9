@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+mkdir -p parts/odoo/openerp/tools
+cd parts/odoo
+wget https://raw.githubusercontent.com/odoo/odoo/master/setup.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/odoo.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp-server
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp-gevent
+cd openerp
+echo "import tools" > __init__.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp/release.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp/loglevels.py
+cd tools
+echo "from config import config" > __init__.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp/tools/config.py
+wget https://raw.githubusercontent.com/odoo/odoo/master/openerp/tools/appdirs.py
+cd ..
+mkdir conf
+touch conf/__init__.py
+cd /workspace
+
+# workaround for pydot bad pypi index
+if [ "$(id -u)" != "0" ]; then
+  sudo easy_install pydot
+else
+  easy_install pydot
+fi
+
+cp -r /usr/local/lib/python2.7/dist-packages/pydot-* eggs/
+
+python bin/buildout -c buildout.dockerfile.cfg
+rm -rf /workspace/parts
+rm -rf /workspace/etc
+rm /workspace/upgrade.py
