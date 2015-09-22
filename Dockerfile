@@ -8,7 +8,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y python-cups python-dbus python-openssl python-libxml2 && \
     apt-get install -y xfonts-base xfonts-75dpi npm && \
     npm install -g less less-plugin-clean-css && \
-    ln -s /usr/bin/nodejs /usr/bin/node && \
+    ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean && \
     pip install pgcli
 
