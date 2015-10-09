@@ -26,9 +26,9 @@ elif [ ! -d "$WORKDIR/eggs" ]; then
   mkdir $WORKDIR/eggs
 fi
 
-if [[ -z $(ls "/$WORKDIR/eggs" | grep reportlab) ]]; then
+if [[ -z $(ls "$WORKDIR/eggs" | grep psycopg) ]]; then
   echo "initializing shared host eggs directory from Docker image"
-  cp "$IMAGE_EGGS_DIR"/. /$WORKDIR/eggs -R
+  cp "$IMAGE_EGGS_DIR"/. $WORKDIR/eggs -R
 fi
 
 # Generate bin/buildout if missing
