@@ -24,7 +24,7 @@ RUN mkdir -p /workspace && chown developer /workspace
 RUN locale-gen pt_BR.UTF-8
 
 RUN pip install flake8 && \
-    pip install pylint
+    pip install --upgrade git+https://github.com/oca/pylint-odoo.git
 
 USER developer
 
