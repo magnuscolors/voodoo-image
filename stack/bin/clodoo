@@ -78,6 +78,13 @@ case $cmd in
     ;;
 
   db:pull)
+    backup_file = "db.$(date +%F_%R).sql" # TODO use the backup folder? root permission WTF?
+    clodoo db:dump > backup_file
+    set -eo pipefail;
+    dropdb db || true
+    set +eo pipefail;
+    createdb db -O developer
+    psql db < backup_file
     ;;
 
   db::push)
