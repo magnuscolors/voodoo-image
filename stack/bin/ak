@@ -62,14 +62,7 @@ case $1 in
 
   build)
     shift
-    if [ "$1" == "--update" ]; then
-        file=$BUILDOUT
-        shift
-    elif [ ! -f "$WORKDIR/frozen.cfg" ]; then
-        file=$BUILDOUT
-    else
-        file="frozen.cfg"
-    fi
+    file="buildout.dev.cfg"
     echo "building project with Anybox Buildout recipe and config file $file"
     echo "this can take a while..."
     python "$WORKDIR/bin/buildout" "$@" "-c" "$file"
