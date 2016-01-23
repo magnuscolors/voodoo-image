@@ -165,7 +165,12 @@ case $1 in
     case $1 in
       backup)
         shift
-        [ ! -d $POSTGRESQL_BACKUPS ] && mkdir -p $POSTGRESQL_BACKUPS && pitrery backup
+        if [ ! -f $POSTGRESQL_BACKUPS/pitr_list ]; then
+            rm -rf $POSTGRESQL_BACKUPS
+            mkdir $POSTGRESQL_BACKUPS
+            touch $POSTGRESQL_BACKUPS/pitr_list
+            pitrery backup
+        fi
         echo $(date +'%F %T') UTC label: $@ >> $POSTGRESQL_BACKUPS/pitr_list
       ;;
       list)
@@ -265,7 +270,6 @@ EOF
                 List all pitr backups: ak pitr list
                 Restore a pitr backup: ak pitr restore [number]
                 purge all pitr files: ak pitr purge
-
       reset_pwd Set 'admin' as the password of all users
 EOF
     ;;
