@@ -15,17 +15,13 @@ cd ..
 mkdir conf
 touch conf/__init__.py
 cd /workspace
-
-# workaround for pydot bad pypi index
-if [ "$(id -u)" != "0" ]; then
-  sudo easy_install pydot
-else
-  easy_install pydot
-fi
-
-cp -r /usr/local/lib/python2.7/dist-packages/pydot-* eggs/
-
+wget https://raw.githubusercontent.com/akretion/voodoo-template/7.0/buildout.cfg
+wget https://raw.githubusercontent.com/akretion/voodoo-template/7.0/frozen.cfg
+wget https://raw.githubusercontent.com/akretion/voodoo-template/7.0/buildout.dev.cfg
 python bin/buildout -c buildout.dockerfile.cfg
 rm -rf /workspace/parts
 rm -rf /workspace/etc
 rm /workspace/upgrade.py
+rm /workspace/buildout.cfg
+rm /workspace/frozen.cfg
+rm /workspace/buildout.dev.cfg

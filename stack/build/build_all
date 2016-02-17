@@ -2,7 +2,7 @@
 set -e
 cd /workspace
 wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
-python bootstrap.py -c buildout.dockerfile.cfg
+python bootstrap.py -c buildout.bootstrap.cfg
 sh fake_odoo7
 sh fake_odoo8
 sh fake_odoo9
