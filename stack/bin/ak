@@ -8,6 +8,7 @@ WORKDIR=${WORKDIR:="/workspace"}
 DOCKER_USER=${DOCKER_USER:="developer"}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/opt/devstep/addons/voodoo/eggs"}
+TEST_DIR=${TEST_DIR:="$SHARED_FOLDER/erp_helper/maintainer-quality-tools/travis/cfg"}
 
 # *************************** INITIALISATION FIRST RUN ********************
 
@@ -97,7 +98,6 @@ case $1 in
     echo "Launch flake8 and pylint tests."
     export FROM_BASH=true
     set +e
-    CONFIG_DIR="/opt/devstep/tests/"
 
     if [ -z "$1" ]; then
         cd /workspace/modules
@@ -108,11 +108,12 @@ case $1 in
     fi
 
     echo "Run flake8 tests"
-    flake8 . --config=${CONFIG_DIR}/travis_run_flake8__init__.cfg
-    flake8 . --config=${CONFIG_DIR}/travis_run_flake8.cfg
+    echo $TEST_DIR
+    flake8 . --config=${TEST_DIR}/travis_run_flake8__init__.cfg
+    flake8 . --config=${TEST_DIR}/travis_run_flake8.cfg
 
     echo "Run pylint tests"
-    pylint --rcfile=${CONFIG_DIR}/travis_run_pylint.cfg $module_to_test
+    pylint --rcfile=${TEST_DIR}/travis_run_pylint.cfg $module_to_test
     ;;
 
 # Postgresql Command
