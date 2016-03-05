@@ -15,8 +15,6 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
-RUN sed -i -e"s/^#fsync = on/fsync = off/g" /opt/devstep/addons/postgresql/conf/postgresql.conf
-
 RUN sed -i -e"s/postgres/developer/g" /home/devstep/.profile.d/postgresql.sh
 
 RUN mkdir -p /workspace && chown developer /workspace
