@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# don't create .pyc and .pyo files
+PYTHONDONTWRITEBYTECODE=True
+export PYTHONDONTWRITEBYTECODE
+
 if [ ! -f /home/devstep/.message_diplayed ]; then
 
 force_color_prompt=true
