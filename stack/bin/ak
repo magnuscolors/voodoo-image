@@ -8,9 +8,15 @@ WORKDIR=${WORKDIR:="/workspace"}
 DOCKER_USER=${DOCKER_USER:="developer"}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/opt/devstep/addons/voodoo/eggs"}
-TEST_DIR=${TEST_DIR:="$SHARED_FOLDER/erp_helper/maintainer-quality-tools/travis/cfg"}
+MAINTAINER_QUALITY_TOOLS=${MAINTAINER_QUALITY_TOOLS:="$SHARED_FOLDER/maintainer-quality-tools"}
+TEST_DIR=${TEST_DIR:="$MAINTAINER_QUALITY_TOOLS/travis/cfg"}
 
 # *************************** INITIALISATION FIRST RUN ********************
+
+# Get maintenainer tools config if missing
+if [ ! -d "$MAINTAINER_QUALITY_TOOLS" ]; then
+    git clone https://github.com/OCA/maintainer-quality-tools $MAINTAINER_QUALITY_TOOLS
+fi
 
 # Link the shared eggs folder or init a new one
 if $SHARED_EGGS; then
@@ -113,6 +119,7 @@ case $1 in
     flake8 . --config=${TEST_DIR}/travis_run_flake8.cfg
 
     echo "Run pylint tests"
+    echo "pylint --rcfile=${TEST_DIR}/travis_run_pylint.cfg $module_to_test"
     pylint --rcfile=${TEST_DIR}/travis_run_pylint.cfg $module_to_test
     ;;
 
