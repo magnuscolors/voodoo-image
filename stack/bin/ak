@@ -8,8 +8,15 @@ WORKDIR=${WORKDIR:="/workspace"}
 DOCKER_USER=${DOCKER_USER:="developer"}
 BUILDOUT=${BUILDOUT:="buildout.dev.cfg"}
 IMAGE_EGGS_DIR=${IMAGE_EGGS_DIR:="/opt/devstep/addons/voodoo/eggs"}
+MAINTAINER_QUALITY_TOOLS=${MAINTAINER_QUALITY_TOOLS:="$SHARED_FOLDER/maintainer-quality-tools"}
+TEST_DIR=${TEST_DIR:="$MAINTAINER_QUALITY_TOOLS/travis/cfg"}
 
 # *************************** INITIALISATION FIRST RUN ********************
+
+# Get maintenainer tools config if missing
+if [ ! -d "$MAINTAINER_QUALITY_TOOLS" ]; then
+    git clone https://github.com/OCA/maintainer-quality-tools $MAINTAINER_QUALITY_TOOLS
+fi
 
 # Link the shared eggs folder or init a new one
 if $SHARED_EGGS; then
@@ -97,7 +104,6 @@ case $1 in
     echo "Launch flake8 and pylint tests."
     export FROM_BASH=true
     set +e
-    CONFIG_DIR="/opt/devstep/tests/"
 
     if [ -z "$1" ]; then
         cd /workspace/modules
@@ -108,11 +114,13 @@ case $1 in
     fi
 
     echo "Run flake8 tests"
-    flake8 . --config=${CONFIG_DIR}/travis_run_flake8__init__.cfg
-    flake8 . --config=${CONFIG_DIR}/travis_run_flake8.cfg
+    echo $TEST_DIR
+    flake8 . --config=${TEST_DIR}/travis_run_flake8__init__.cfg
+    flake8 . --config=${TEST_DIR}/travis_run_flake8.cfg
 
     echo "Run pylint tests"
-    pylint --rcfile=${CONFIG_DIR}/travis_run_pylint.cfg $module_to_test
+    echo "pylint --rcfile=${TEST_DIR}/travis_run_pylint.cfg $module_to_test"
+    pylint --rcfile=${TEST_DIR}/travis_run_pylint.cfg $module_to_test
     ;;
 
 # Postgresql Command
