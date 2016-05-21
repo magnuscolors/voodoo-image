@@ -38,9 +38,6 @@ RUN /opt/devstep/bin/configure-addons postgresql
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
-# Pre-build for tests
-RUN sh /workspace/build_tests
-
 # Install ak cli
 USER root
 ADD stack/bin/ak /usr/local/bin/ak
