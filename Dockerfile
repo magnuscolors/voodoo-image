@@ -3,16 +3,14 @@ FROM ubuntu:16.04
 USER root
 
 RUN DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
-    apt-get install -y python-cups python-dbus python-openssl python-libxml2 && \
-    apt-get install -y xfonts-base xfonts-75dpi npm && \
+    apt update && \
+    apt install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
+    apt install -y python-cups python-dbus python-openssl python-libxml2 && \
+    apt install wkhtmltopdf && \
+    apt install -y xfonts-base xfonts-75dpi npm && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean && \
-
-RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 RUN locale-gen pt_BR.UTF-8
 
