@@ -1,4 +1,4 @@
-FROM fgrehm/devstep:v0.4.0
+FROM ubuntu:16.04
 
 USER root
 
@@ -10,45 +10,33 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean && \
-    pip install pgcli
 
 RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
-
-RUN sed -i -e"s/postgres/developer/g" /home/devstep/.profile.d/postgresql.sh
-
-RUN mkdir -p /workspace && chown developer /workspace
 
 RUN locale-gen pt_BR.UTF-8
 
 RUN pip install flake8 && \
     pip install --upgrade git+https://github.com/oca/pylint-odoo.git
+    pip install pgcli
 
-USER developer
+#Install fonts
+ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
+RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
 
-# Config for developer user
-ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
-RUN mkdir -p /home/devstep/.ssh
-RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
-
-# Install postgresql
-RUN /opt/devstep/bin/configure-addons postgresql
+RUN mkdir -p /workspace && chown developer /workspace
 
 # Pre-build environement for odoo
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
 # Pre-build for tests
-RUN sh /workspace/build_tests
+# TODO reimplement using https://github.com/akretion/voodoo/pull/33/files 
+#RUN sh /workspace/build_tests
 
-# Install ak cli
-USER root
-ADD stack/bin/ak /usr/local/bin/ak
-
-#Install fonts
-ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
-RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
-
-USER developer
+## Config for developer user
+#ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
+#RUN mkdir -p /home/devstep/.ssh
+#RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
 
 WORKDIR /workspace
