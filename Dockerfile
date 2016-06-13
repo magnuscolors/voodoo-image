@@ -28,6 +28,8 @@ RUN mkdir -p /workspace
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
+RUN pip install git+https://github.com/akretion/ak.git@v2 --upgrade
+
 # Pre-build for tests
 # TODO reimplement using https://github.com/akretion/voodoo/pull/33/files 
 #RUN sh /workspace/build_tests
