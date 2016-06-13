@@ -4,24 +4,25 @@ USER root
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
-    apt-get install -y python-cups python-dbus python-openssl python-libxml2 && \
-    apt-get install -y wkhtmltopdf xfonts-base xfonts-75dpi npm && \
+    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
+    python-cups python-dbus python-openssl python-libxml2 wkhtmltopdf xfonts-base \
+    xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean
 
 RUN locale-gen pt_BR.UTF-8
 
-RUN pip install flake8 && \
-    pip install --upgrade git+https://github.com/oca/pylint-odoo.git
+RUN pip install --upgrade pip && \
+    pip install flake8 && \
+    pip install --upgrade git+https://github.com/oca/pylint-odoo.git && \
     pip install pgcli
 
 #Install fonts
 ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
 RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
 
-RUN mkdir -p /workspace && chown developer /workspace
+RUN mkdir -p /workspace
 
 # Pre-build environement for odoo
 ADD stack/build /workspace/
