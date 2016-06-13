@@ -8,7 +8,5 @@ sh fake_odoo8
 sh fake_odoo9
 mkdir -p /opt/voodoo
 mv /workspace/eggs /opt/voodoo/eggs
-mv /workspace/develop-eggs /opt/voodoo/develop-eggs
-mv /workspace/downloads /opt/voodoo/downloads
 rm /workspace/bootstrap.py
 rm buildout.dockerfile.cfg fake_odoo7 fake_odoo8 fake_odoo9 build_all
