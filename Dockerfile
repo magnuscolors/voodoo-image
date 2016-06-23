@@ -1,51 +1,49 @@
-FROM fgrehm/devstep:v0.4.0
+FROM ubuntu:16.04
 
 USER root
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz && \
-    apt-get install -y python-cups python-dbus python-openssl python-libxml2 && \
-    apt-get install -y xfonts-base xfonts-75dpi npm && \
+    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
+    python-cups python-dbus python-openssl python-libxml2 wkhtmltopdf xfonts-base \
+    xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
-    apt-get clean && \
-    pip install pgcli
+    apt-get clean
 
-RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
+RUN locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8 && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
-RUN sed -i -e"s/postgres/developer/g" /home/devstep/.profile.d/postgresql.sh
-
-RUN mkdir -p /workspace && chown developer /workspace
-
-RUN locale-gen pt_BR.UTF-8
-
-RUN pip install flake8 && \
-    pip install --upgrade git+https://github.com/oca/pylint-odoo.git
-
-USER developer
-
-# Config for developer user
-ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
-RUN mkdir -p /home/devstep/.ssh
-RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
-
-# Install postgresql
-RUN /opt/devstep/bin/configure-addons postgresql
-
-# Pre-build environement for odoo
-ADD stack/build /workspace/
-RUN sh /workspace/build_all
-
-# Install ak cli
-USER root
-ADD stack/bin/ak /usr/local/bin/ak
+RUN pip install --upgrade pip && \
+    pip install flake8 && \
+    pip install git+https://github.com/oca/pylint-odoo.git && \
+    pip install pgcli && \
+    pip install git+https://github.com/akretion/ak.git
 
 #Install fonts
 ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
 RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
 
-USER developer
+RUN mkdir -p /workspace
+
+# Pre-build environement for odoo
+ADD stack/build /workspace/
+RUN sh /workspace/build_all
+
+# Pre-build for tests
+# TODO reimplement using https://github.com/akretion/voodoo/pull/33/files 
+#RUN sh /workspace/build_tests
+
+## Config for developer user
+#ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
+#RUN mkdir -p /home/devstep/.ssh
+#RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
+
+RUN adduser odoo
+
+COPY stack/entrypoint /home/odoo/entrypoint
+ENTRYPOINT ["/home/odoo/entrypoint"]
 
 WORKDIR /workspace
+USER odoo

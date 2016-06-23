@@ -6,9 +6,7 @@ python bootstrap.py -c buildout.bootstrap.cfg
 sh fake_odoo7
 sh fake_odoo8
 sh fake_odoo9
-mkdir -p /opt/devstep/addons/voodoo
-mv /workspace/eggs /opt/devstep/addons/voodoo/eggs
-mv /workspace/develop-eggs /opt/devstep/addons/voodoo/develop-eggs
-mv /workspace/downloads /opt/devstep/addons/voodoo/downloads
+mkdir -p /opt/voodoo
+mv /workspace/eggs /opt/voodoo/eggs
 rm /workspace/bootstrap.py
 rm buildout.dockerfile.cfg fake_odoo7 fake_odoo8 fake_odoo9 build_all
