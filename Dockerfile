@@ -11,12 +11,15 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean
 
-RUN locale-gen pt_BR.UTF-8
+RUN locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8 && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
 RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install --upgrade git+https://github.com/oca/pylint-odoo.git && \
-    pip install pgcli
+    pip install pgcli && \
+    pip install git+https://github.com/akretion/ak.git@v2
 
 #Install fonts
 ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
