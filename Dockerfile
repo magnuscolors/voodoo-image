@@ -17,9 +17,9 @@ RUN locale-gen en_US.UTF-8 && \
 
 RUN pip install --upgrade pip && \
     pip install flake8 && \
-    pip install --upgrade git+https://github.com/oca/pylint-odoo.git && \
+    pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install pgcli && \
-    pip install git+https://github.com/akretion/ak.git@v2
+    pip install git+https://github.com/akretion/ak.git
 
 #Install fonts
 ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
@@ -31,8 +31,6 @@ RUN mkdir -p /workspace
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
-RUN pip install git+https://github.com/akretion/ak.git@v2 --upgrade
-
 # Pre-build for tests
 # TODO reimplement using https://github.com/akretion/voodoo/pull/33/files 
 #RUN sh /workspace/build_tests
@@ -42,4 +40,10 @@ RUN pip install git+https://github.com/akretion/ak.git@v2 --upgrade
 #RUN mkdir -p /home/devstep/.ssh
 #RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
 
+RUN adduser odoo
+
+COPY stack/entrypoint /home/odoo/entrypoint
+ENTRYPOINT ["/home/odoo/entrypoint"]
+
 WORKDIR /workspace
+USER odoo
