@@ -47,3 +47,5 @@ ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 WORKDIR /workspace
 USER odoo
+RUN git config --global user.email "voodoo@fake.com" &&\
+    git config --global user.name "Voodoo"
