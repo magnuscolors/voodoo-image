@@ -42,8 +42,8 @@ RUN sh /workspace/build_all
 
 RUN adduser odoo
 
-COPY stack/entrypoint /home/odoo/entrypoint
-ENTRYPOINT ["/home/odoo/entrypoint"]
+COPY stack/entrypoint /usr/local/bin/entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 WORKDIR /workspace
 USER odoo
