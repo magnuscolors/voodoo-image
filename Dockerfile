@@ -15,12 +15,6 @@ RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8 && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
-RUN pip install --upgrade pip && \
-    pip install flake8 && \
-    pip install git+https://github.com/oca/pylint-odoo.git && \
-    pip install pgcli && \
-    pip install git+https://github.com/akretion/ak.git
-
 #Install fonts
 ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
 RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
@@ -41,6 +35,12 @@ RUN sh /workspace/build_all
 #RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
 
 RUN adduser odoo
+
+RUN pip install --upgrade pip && \
+    pip install flake8 && \
+    pip install pgcli && \
+    pip install git+https://github.com/oca/pylint-odoo.git && \
+    pip install git+https://github.com/akretion/ak.git@1.1.1
 
 COPY stack/entrypoint /usr/local/bin/entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
