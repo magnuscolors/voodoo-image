@@ -6,12 +6,13 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
     python-cups python-dbus python-openssl python-libxml2 wkhtmltopdf xfonts-base \
-    xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev && \
+    xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev libffi-dev && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean
 
-RUN locale-gen en_US.UTF-8 && \
+RUN locale-gen pt_BR.UTF-8 && \
+    locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8 && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
@@ -26,7 +27,7 @@ ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
 # Pre-build for tests
-# TODO reimplement using https://github.com/akretion/voodoo/pull/33/files 
+# TODO reimplement using https://github.com/akretion/voodoo/pull/33/files
 #RUN sh /workspace/build_tests
 
 ## Config for developer user
