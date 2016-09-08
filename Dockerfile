@@ -5,12 +5,16 @@ USER root
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
-    python-cups python-dbus python-openssl python-libxml2 wkhtmltopdf xfonts-base \
+    python-cups python-dbus python-openssl python-libxml2 xfonts-base \
     xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev \
     libffi-dev vim && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean
+
+# Force to install the version 0.12.1 of wkhtmltopdf as recomended by odoo
+RUN wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb && \
+    dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 
 RUN locale-gen pt_BR.UTF-8 && \
     locale-gen en_US.UTF-8 && \
