@@ -46,12 +46,14 @@ RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install pgcli && \
     pip install git+https://github.com/oca/pylint-odoo.git && \
-    pip install git+https://github.com/akretion/ak.git@1.2.1
+    pip install git+https://github.com/akretion/ak.git@1.2.3
+
+WORKDIR /workspace
 
 COPY stack/entrypoint /usr/local/bin/entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
-WORKDIR /workspace
 USER odoo
 RUN git config --global user.email "voodoo@fake.com" &&\
     git config --global user.name "Voodoo"
+
