@@ -7,8 +7,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
     python-cups python-dbus python-openssl python-libxml2 xfonts-base \
     xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev \
-    libffi-dev vim telnet ghostscript && \
-    poppler-utils && \
+    libffi-dev vim telnet ghostscript poppler-utils && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
     apt-get clean
