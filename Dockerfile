@@ -4,9 +4,9 @@ USER root
 
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev python-pip graphviz \
-    python-cups python-dbus python-openssl python-libxml2 xfonts-base \
-    xfonts-75dpi npm git postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev \
+    apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev \
+    python-pip graphviz xfonts-base xfonts-75dpi npm git \
+    postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev \
     libffi-dev vim telnet ghostscript poppler-utils && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
@@ -31,15 +31,6 @@ RUN mkdir -p /workspace
 ADD stack/build /workspace/
 RUN sh /workspace/build_all
 
-# Pre-build for tests
-# TODO reimplement using https://github.com/akretion/voodoo/pull/33/files
-#RUN sh /workspace/build_tests
-
-## Config for developer user
-#ADD stack/profile/voodoo.sh /home/devstep/.profile.d/voodoo.sh
-#RUN mkdir -p /home/devstep/.ssh
-#RUN mkdir /home/devstep/.local && touch /home/devstep/.viminfo
-
 RUN adduser odoo
 
 RUN pip install --upgrade pip && \
@@ -56,4 +47,3 @@ ENTRYPOINT ["/usr/local/bin/entrypoint"]
 USER odoo
 RUN git config --global user.email "voodoo@fake.com" &&\
     git config --global user.name "Voodoo"
-
