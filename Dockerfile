@@ -29,7 +29,7 @@ RUN mkdir -p /workspace
 
 # Pre-build environement for odoo
 ADD stack/build /workspace/
-RUN sh /workspace/build_all
+RUN sh /workspace/build
 
 RUN adduser odoo
 
@@ -44,6 +44,6 @@ WORKDIR /workspace
 COPY stack/entrypoint /usr/local/bin/entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
-USER odoo
-RUN git config --global user.email "voodoo@fake.com" &&\
-    git config --global user.name "Voodoo"
+#USER odoo
+#RUN git config --global user.email "voodoo@fake.com" &&\
+#    git config --global user.name "Voodoo"
