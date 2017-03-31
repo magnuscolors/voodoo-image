@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+cd /workspace
+wget https://raw.github.com/buildout/buildout/master/bootstrap/bootstrap.py
+python bootstrap.py
+./bin/buildout -c frozen.cfg
+mkdir -p /opt/voodoo
+mv /workspace/eggs /opt/voodoo/eggs
+mv frozen.cfg /opt/voodoo/
+rm -rf *
