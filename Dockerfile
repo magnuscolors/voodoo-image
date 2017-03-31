@@ -44,6 +44,6 @@ WORKDIR /workspace
 COPY stack/entrypoint /usr/local/bin/entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
-#USER odoo
-#RUN git config --global user.email "voodoo@fake.com" &&\
-#    git config --global user.name "Voodoo"
+USER odoo
+RUN git config --global user.email "voodoo@fake.com" &&\
+    git config --global user.name "Voodoo"
