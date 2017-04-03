@@ -43,6 +43,7 @@ WORKDIR /workspace
 
 COPY stack/entrypoint /usr/local/bin/entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
+EXPOSE 8069
 
 USER odoo
 RUN git config --global user.email "voodoo@fake.com" &&\
