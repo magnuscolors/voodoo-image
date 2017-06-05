@@ -37,7 +37,7 @@ RUN pip install --upgrade pip && \
     pip install pgcli && \
     pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/akretion/ak.git@1.4.0 && \
-    pip install PyChart
+    pip install python-chart
 
 WORKDIR /workspace
 
