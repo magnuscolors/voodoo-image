@@ -6,5 +6,6 @@ python bootstrap.py
 ./bin/buildout -c frozen.cfg
 mkdir -p /opt/voodoo
 mv /workspace/eggs /opt/voodoo/eggs
+ln -s /opt/voodoo/eggs/pyusb* PyUSB*
 mv frozen.cfg /opt/voodoo/
 rm -rf *
