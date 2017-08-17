@@ -35,7 +35,7 @@ RUN adduser odoo
 RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install pgcli && \
-    pip install git+https://github.com/oca/pylint-odoo.git && \
+#    pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/whulshof/ak.git@1.4.1
 
 WORKDIR /workspace
