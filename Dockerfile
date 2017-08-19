@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev \
     python-pip graphviz xfonts-base xfonts-75dpi npm git \
-    postgresql-client wget libpq-dev libjpeg8-dev libldap2-dev \
+    postgresql-client-9.6 wget libpq-dev libjpeg8-dev libldap2-dev \
     libffi-dev vim telnet ghostscript poppler-utils locales nano && \
     npm install -g less less-plugin-clean-css && \
     ln -sf /usr/bin/nodejs /usr/bin/node && \
@@ -35,7 +35,7 @@ RUN adduser odoo
 RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install pgcli && \
-#    pip install git+https://github.com/oca/pylint-odoo.git && \
+    pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/whulshof/ak.git@1.4.1
 
 WORKDIR /workspace
