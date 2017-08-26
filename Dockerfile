@@ -25,13 +25,12 @@ RUN locale-gen en_US.UTF-8 && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
 #Install fonts
-ADD stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
+COPY stack/fonts/c39hrp24dhtt.ttf /usr/share/fonts/c39hrp24dhtt.ttf
 RUN chmod a+r /usr/share/fonts/c39hrp24dhtt.ttf && fc-cache -f -v
 
-RUN mkdir -p /workspace
-
 # Pre-build environment for odoo
-ADD stack/build /workspace/
+RUN mkdir -p /workspace
+COPY stack/build /workspace/
 RUN sh /workspace/build
 
 RUN adduser odoo
