@@ -48,5 +48,5 @@ ENTRYPOINT ["/usr/local/bin/entrypoint"]
 EXPOSE 8069
 
 USER odoo
-RUN git config --global user.email "voodoo@fake.com" &&\
-    git config --global user.name "Voodoo"
+RUN git config --global user.email "w.hulshof@magnus.nl" &&\
+    git config --global user.name "whulshof"
