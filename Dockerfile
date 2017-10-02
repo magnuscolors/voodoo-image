@@ -34,7 +34,7 @@ COPY stack/build /workspace/
 RUN sh /workspace/build
 
 RUN adduser odoo
-
+RUN rm -rf  /usr/local/lib/python2.7/dist-packages/cli_helpers-0.2.3.dist-info/entry_points.txt
 RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install pgcli && \
