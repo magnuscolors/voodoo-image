@@ -34,10 +34,12 @@ COPY stack/build /workspace/
 RUN sh /workspace/build
 
 RUN adduser odoo
-RUN rm -rf  /usr/local/lib/python2.7/dist-packages/cli_helpers-0.2.3.dist-info/entry_points.txt
+
 RUN pip install --upgrade pip && \
+    pip install --upgrade setuptools && \
     pip install flake8 && \
-    pip install pgcli && \
+    pip install pgcli
+RUN rm -rf  /usr/local/lib/python2.7/dist-packages/cli_helpers-0.2.3.dist-info/entry_points.txt
     pip install invoice2data && \
     pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/whulshof/ak.git@1.4.1
