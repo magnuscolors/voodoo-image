@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get install -y libsasl2-dev bzr mercurial libxmlsec1-dev \
     python-pip graphviz xfonts-base xfonts-75dpi npm git \
-    wget libpq-dev libjpeg8-dev libldap2-dev libcups2-dev \
+    wget libpq-dev libjpeg8-dev libldap2-dev cups libcups2-dev \
     libffi-dev vim telnet ghostscript poppler-utils imagemagick tesseract-ocr locales nano \
     && npm install -g less less-plugin-clean-css \
     && ln -sf /usr/bin/nodejs /usr/bin/node \
