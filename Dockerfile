@@ -8,6 +8,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python-pip graphviz xfonts-base xfonts-75dpi npm git \
     wget libpq-dev libjpeg8-dev libldap2-dev cups libcups2-dev \
     libffi-dev vim telnet ghostscript poppler-utils imagemagick tesseract-ocr locales nano \
+    libgeos-dev \
     && npm install -g less less-plugin-clean-css \
     && ln -sf /usr/bin/nodejs /usr/bin/node \
     && echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
@@ -40,8 +41,7 @@ RUN pip install --upgrade pip && \
     pip install flake8 && \
     pip install pgcli
 RUN rm -rf  /usr/local/lib/python2.7/dist-packages/cli_helpers-0.2.3.dist-info/entry_points.txt
-RUN pip install invoice2data && \
-    pip install git+https://github.com/oca/pylint-odoo.git && \
+RUN pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/whulshof/ak.git@1.4.1
 
 WORKDIR /workspace
