@@ -37,7 +37,7 @@ RUN sh /workspace/build
 RUN adduser odoo
 
 RUN pip install --upgrade pip && \
-    hash -d pip && \
+    hash -r pip && \
     pip install --upgrade setuptools && \
     pip install flake8 && \
     pip install pgcli
