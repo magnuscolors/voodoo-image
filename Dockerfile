@@ -44,7 +44,7 @@ RUN pip install --upgrade pip && \
 RUN rm -rf  /usr/local/lib/python2.7/dist-packages/cli_helpers-0.2.3.dist-info/entry_points.txt
 RUN pip install invoice2data && \
     pip install pdf2image && \
-    pip install zpl2
+    pip install zpl2 \
     pip install git+https://github.com/oca/pylint-odoo.git && \
     pip install git+https://github.com/magnuscolors/ak.git@1.4.1
 
